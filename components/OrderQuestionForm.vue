@@ -10,10 +10,10 @@
       </template>
     </div>
     <div class="flex gap-4 justify-between">
-      <input type="text" v-model="answer_text" :disabled="answered" class="bg-slate-300 p-2 flex-grow">
+      <input type="text" v-model="answer_text" :disabled="answered" class="bg-slate-600 p-2 flex-grow">
     </div>
-    <button v-if="!answered" @click="submitAnswer"  class="bg-slate-300 p-2">Submit</button>
-    <button v-if="answered" @click="next" class="bg-slate-300 p-2">Next</button>
+    <button v-if="!answered" @click="submitAnswer"  class="bg-slate-600 p-2 hover:bg-slate-800">Submit</button>
+    <button v-if="answered" @click="next" class="bg-slate-600 p-2 hover:bg-slate-800">Next</button>
     <p v-if="answered" :class="is_correct ? 'text-green-500' : 'text-red-500'">Answer: {{right_answer}}</p>
   </div>
 </template>

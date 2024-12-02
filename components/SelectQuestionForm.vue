@@ -14,8 +14,8 @@
         </div>
       </template>
     </div>
-    <button v-if="!answered" @click="submitAnswer"  class="bg-slate-300 p-2">Submit</button>
-    <button v-if="answered" @click="next" class="bg-slate-300 p-2">Next</button>
+    <button v-if="!answered" @click="submitAnswer"  class="bg-slate-600 p-2 hover:bg-slate-800">Submit</button>
+    <button v-if="answered" @click="next" class="bg-slate-600 p-2 hover:bg-slate-800">Next</button>
   </div>
 </template>
 

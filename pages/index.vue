@@ -6,13 +6,13 @@
           <p class="text-slate-100">Correct: {{ correct_count }}</p>
           <p class="text-slate-100">Incorrect: {{ incorrect_count }}</p>
         </div>
-        <button class="bg-slate-300 p-2" @click="dialog_visible = true">Settings</button>
+        <button class="bg-slate-600 p-2 hover:bg-slate-800" @click="dialog_visible = true">Settings</button>
       </div>
       <component v-bind:is="myComponent" :question="currentQuestion" @answered="answered"></component>
     </div>
     <Dialog v-model:visible="dialog_visible" modal header="Settings" :style="{ width: '25rem' }"
       pt:root="bg-slate-200 rounded p-4" pt:header="flex flex-row w-full justify-between" pt:headeraction="w-max h-max">
-      <div class="flex flex-row">
+      <div class="flex flex-row justify-between">
         <div>
           <div>
             <input id="set1" type="checkbox" v-model="settingsStore.question_types['text']">
@@ -34,6 +34,18 @@
             <input id="set5" type="checkbox" v-model="settingsStore.question_types['category']">
             <label for="set5">Type category</label>
           </div>
+          <div class="mt-4">
+            <input id="set6" type="checkbox" v-model="settingsStore.repeat">
+            <label for="set6">Repeat not correct</label>
+          </div>
+        </div>
+        <div class="flex flex-col gap-1 mr-4">
+          <template v-for="(bin, ind) in settingsStore.questions_bin">
+            <div>
+              <input :id="'bin' + ind" type="checkbox" v-model="settingsStore.questions_bin[ind]">
+              <label :for="'bin' + ind">{{ ind * 10 + 1 }} - {{ (ind+1)*10 + 1 }}</label>
+            </div>
+          </template>
         </div>
       </div>
 
@@ -52,13 +64,12 @@ import { Dialog } from 'primevue';
 const currentQuestion: Ref<Question | null> = ref(null)
 const questionsStore = useMyQuestionsStore()
 const settingsStore = useMySettingsStore()
+const toast = useToast()
 
 const correct_count = ref(0)
 const incorrect_count = ref(0)
 
 const dialog_visible = ref(false)
-
-const question_bins: Ref<number[]> = ref([])
 
 const question_forms: { [id: string]: Component } = {
   "text": TextQuestionForm,
@@ -69,8 +80,15 @@ const question_forms: { [id: string]: Component } = {
 }
 
 onMounted(() => {
-  loadNextQuestion()
-  question_bins.value = new Array(Math.ceil(questionsStore.questions.length / 10)).fill(true)
+  if(settingsStore.questions_bin.length != Math.ceil(questionsStore.questions.length / 10))
+      settingsStore.questions_bin = new Array(Math.ceil(questionsStore.questions.length / 10)).fill(true)
+  currentQuestion.value = questionsStore.getNextRandomQuestion([0], {
+    "text": true,
+    "select": true,
+    "multiple-select": true,
+    "order": true,
+    "category": true
+  })
 })
 
 const myComponent: Component = computed(() => {
@@ -86,6 +104,7 @@ function answered(is_correct: boolean) {
   } else {
     incorrect_count.value += 1
   }
+  if(settingsStore.repeat && !is_correct) return
   loadNextQuestion()
 }
 
@@ -99,8 +118,16 @@ function generateRange(a: number, b: number) {
 
 
 function loadNextQuestion() {
-  const question = questionsStore.getNextRandomQuestion(generateRange(0, questionsStore.questions.length - 1))
-  if (!settingsStore.question_types[question.type]) return loadNextQuestion()
+  let question_nums: number[] = []
+  for (let i = 0; i < settingsStore.questions_bin.length; i++) {
+    if (!settingsStore.questions_bin[i]) continue
+    question_nums = question_nums.concat(generateRange(i * 10, (i + 1) * 10 - 1))
+  }
+  const question = questionsStore.getNextRandomQuestion(question_nums, settingsStore.question_types)
+  if (question == null) {
+    toast.add({ summary: "Следующий вопрос не найден", severity: "error", detail: "Измените фильтры", life: 30000})
+    return
+  }
   currentQuestion.value = question
 }
 

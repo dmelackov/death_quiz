@@ -1,8 +1,16 @@
+import Aura from '@primevue/themes/aura';
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   primevue: {
     options: {
-      unstyled: true
+      theme: {
+        preset: Aura,
+        options: {
+            prefix: 'p',
+            darkModeSelector: 'system',
+            cssLayer: false
+        }
+      }
     }
   },
   modules: [
