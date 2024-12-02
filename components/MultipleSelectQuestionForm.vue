@@ -9,9 +9,9 @@
     </div>
     <div class="grid gap-1 grid-cols-[repeat(auto-fit,minmax(150px,1fr))]">
       <template v-for="(answer, ind) in shuffled_answers">
-        <div class="p-2 text-center w-full min-w-24 flex flex-row justify-center" @click="toggle(ind)"
+        <div class="p-2 text-center w-full min-w-24 flex flex-col justify-center" @click="toggle(ind)"
           :class="[getColor(ind), answered ? '' : 'hover:bg-slate-700 cursor-pointer']">
-          <div class="flex w-max gap-1 min-w-0">
+          <div class="flex gap-1">
             <input type="checkbox" v-model="answers[ind]" disabled>
             <p class="text-slate-100">{{ answer }}</p>
           </div>
