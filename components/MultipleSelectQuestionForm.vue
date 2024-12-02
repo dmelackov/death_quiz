@@ -1,7 +1,7 @@
 <template>
   <div class="bg-slate-500 p-4 flex flex-col gap-3">
-    <p class="text-slate-300">Номер вопроса: {{props.question.id}}</p>
-    <h1 class="text-slate-100 text-2xl">{{props.question.question}}</h1>
+    <p class="text-slate-300">Номер вопроса: {{ props.question.id }}</p>
+    <h1 class="text-slate-100 text-2xl whitespace-pre-wrap">{{ props.question.question }}</h1>
     <div>
       <template v-for="attachment in props.question.attachments">
         <img :src='"/static/attachments/" + attachment' alt="" srcset="" class="w-1/4">
@@ -9,13 +9,16 @@
     </div>
     <div class="grid gap-1 grid-cols-[repeat(auto-fit,minmax(150px,1fr))]">
       <template v-for="(answer, ind) in shuffled_answers">
-        <div class="p-2 text-center w-full min-w-24" @click="toggle(ind)"
-        :class="[getColor(ind), answered ? '' : 'hover:bg-slate-700 cursor-pointer']">
-          <p class="text-slate-100">{{answer}}</p>
+        <div class="p-2 text-center w-full min-w-24 flex flex-col justify-center" @click="toggle(ind)"
+          :class="[getColor(ind), answered ? '' : 'hover:bg-slate-700 cursor-pointer']">
+          <div class="flex">
+            <input type="checkbox" v-model="answers[ind]" disabled>
+            <p class="text-slate-100">{{ answer }}</p>
+          </div>
         </div>
       </template>
-    </div>  
-    <button v-if="!answered" @click="submitAnswer"  class="bg-slate-300 p-2">Submit</button>
+    </div>
+    <button v-if="!answered" @click="submitAnswer" class="bg-slate-300 p-2">Submit</button>
     <button v-if="answered" @click="next" class="bg-slate-300 p-2">Next</button>
   </div>
 </template>
@@ -45,17 +48,17 @@ onMounted(() => {
 })
 
 
-function getColor(index: number){
+function getColor(index: number) {
   if (answered.value) {
     if (isCorrect(shuffled_answers.value[index])) {
       if (answers.value[index]) {
-        return "bg-green-500"
+        return "bg-green-600"
       } else {
-        return "bg-yellow-500"
+        return "bg-yellow-600"
       }
     } else {
       if (answers.value[index]) {
-        return "bg-red-500"
+        return "bg-red-600"
       } else {
         return "bg-slate-600"
       }
@@ -72,7 +75,7 @@ function toggle(index: number) {
   if (answered.value) return
   answers.value[index] = !answers.value[index]
 }
-function reload(){
+function reload() {
   let new_arr = props.question.candidates.slice()
   shuffled_answers.value = shuffle(new_arr)
   answers.value = new Array(shuffled_answers.value.length).fill(false)
@@ -90,7 +93,7 @@ watch(props, () => {
 })
 
 function isCorrect(answer: string) {
-  return props.question.answer.includes(props.question.candidates?.indexOf(answer) )
+  return props.question.answer.includes(props.question.candidates?.indexOf(answer))
 }
 
 function submitAnswer() {
@@ -105,7 +108,7 @@ function submitAnswer() {
   is_correct.value = total_correct
 }
 
-function next(){
+function next() {
   emit('answered', is_correct.value)
   reload()
 }

@@ -65,8 +65,12 @@ export const useMyQuestionsStore = defineStore('myQuestionsStore', {
     // ]
   }),
   actions: {
-    getNextRandomQuestion() {
-      return this.questions[Math.round(Math.random() * (this.questions.length - 1))]
+    getNextRandomQuestion(selected: number[]) {
+      let select_range = []
+      for (let i = 0; i < this.questions.length; i++) {
+        if(selected.includes(i)) select_range.push(this.questions[i])
+      }
+      return select_range[Math.round(Math.random() * (select_range.length - 1))]
     },
   }
 })
