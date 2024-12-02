@@ -23,6 +23,11 @@ export interface CategoryQuestion extends Question {
   type: 'category'
 }
 
+export interface OrderQuestion extends Question {
+  answer: string[]
+  type: 'order'
+}
+
 export const useMyQuestionsStore = defineStore('myQuestionsStore', {
   state: () => ({
     questions: jsonData

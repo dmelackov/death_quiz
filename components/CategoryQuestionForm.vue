@@ -37,15 +37,6 @@ const answered = ref(false)
 const is_correct = ref(false)
 
 const shuffled_answers = ref<string[]>([])
-
-function shuffle(array: string[]) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array
-}
-
 onMounted(() => {
   reload()
 })
@@ -53,6 +44,7 @@ onMounted(() => {
 
 function reload() {
   let new_arr = props.question.candidates.slice()
+  shuffleArray(new_arr)
   shuffled_answers.value = new_arr
   answers.value = new Array(shuffled_answers.value.length).fill("")
   answered.value = false

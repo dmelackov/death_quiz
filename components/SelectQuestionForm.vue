@@ -32,14 +32,6 @@ const is_correct = ref(false)
 
 const shuffled_answers = ref<string[]>([])
 
-function shuffle(array: string[]) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array
-}
-
 function getColor(index: number){
   if (answered.value) {
     if (isCorrect(shuffled_answers.value[index])) {
@@ -92,7 +84,7 @@ function next(){
 
 function reload(){
   const new_arr = props.question.candidates?.slice()
-  shuffled_answers.value = shuffle(new_arr as string[])
+  shuffled_answers.value = shuffleArray(new_arr as string[])
   answered.value = false
   answer_text.value = ''
   is_correct.value = false

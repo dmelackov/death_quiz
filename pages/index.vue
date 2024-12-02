@@ -1,6 +1,6 @@
 <template>
-  <div class="w-screen min-h-screen flex p-4 bg-slate-900 ">
-    <div class="w-full max-w-full">
+  <div class="w-screen min-h-screen flex p-4 bg-slate-900 gap-2 flex-col">
+    <div class="w-full max-w-full flex flex-col gap-1">
       <div class="flex justify-between">
         <div>
           <p class="text-slate-100">Correct: {{ correct_count }}</p>
@@ -8,8 +8,6 @@
         </div>
         <button class="bg-slate-300 p-2" @click="dialog_visible = true">Settings</button>
       </div>
-
-
       <component v-bind:is="myComponent" :question="currentQuestion" @answered="answered"></component>
     </div>
     <Dialog v-model:visible="dialog_visible" modal header="Settings" :style="{ width: '25rem' }"

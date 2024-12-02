@@ -7,7 +7,7 @@ export const useMySettingsStore = defineStore({
       "text": true,
       "select": true,
       "multiple-select": true,
-      "order": false,
+      "order": true,
       "category": true
     }
    }),
