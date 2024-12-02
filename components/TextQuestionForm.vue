@@ -1,7 +1,7 @@
 <template>
   <div class="bg-slate-500 p-4 flex flex-col gap-1" @keypress="enter">
     <p class="text-slate-300">Номер вопроса: {{props.question.id}}</p>
-    <h1 class="text-slate-100 text-2xl">{{props.question.question}}</h1>
+    <h1 class="text-slate-100 text-2xl whitespace-pre-wrap">{{props.question.question}}</h1>
     <div>
       <template v-for="attachment in props.question.attachments">
         <img :src='"/static/attachments/" + attachment' alt="" srcset="" class="w-1/4">

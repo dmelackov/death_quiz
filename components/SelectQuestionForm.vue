@@ -1,7 +1,7 @@
 <template>
   <div class="bg-slate-500 p-4 flex flex-col gap-3">
     <p class="text-slate-300">Номер вопроса: {{props.question.id}}</p>
-    <h1 class="text-slate-100 text-2xl">{{props.question.question}}</h1>
+    <h1 class="text-slate-100 text-2xl whitespace-pre-wrap">{{props.question.question}}</h1>
     <div>
       <template v-for="attachment in props.question.attachments">
         <img :src='"/static/attachments/" + attachment' alt="" srcset="" class="w-1/4">
@@ -9,7 +9,7 @@
     </div>
     <div class="grid gap-1 grid-cols-[repeat(auto-fit,minmax(150px,1fr))]">
       <template v-for="(answer, ind) in shuffled_answers">
-        <div class="p-2 text-center w-full min-w-24" @click="answer_f(ind)" :class="[getColor(ind), answered ? '' : 'hover:bg-slate-700 cursor-pointer']">
+        <div class="p-2 text-center w-full min-w-24 flex flex-col justify-center" @click="answer_f(ind)" :class="[getColor(ind), answered ? '' : 'hover:bg-slate-700 cursor-pointer']">
           <p class="text-slate-100" >{{answer}}</p>
         </div>
       </template>
@@ -43,10 +43,10 @@ function shuffle(array: string[]) {
 function getColor(index: number){
   if (answered.value) {
     if (isCorrect(shuffled_answers.value[index])) {
-      return "bg-green-500"
+      return "bg-green-600"
     } else {
       if(shuffled_answers.value[index] == answer_text.value){
-        return "bg-red-500"
+        return "bg-red-600"
       }
       return "bg-slate-600"
     }

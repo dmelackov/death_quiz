@@ -11,5 +11,6 @@ export const useMySettingsStore = defineStore({
       "category": true
     }
    }),
-  actions: {}
+  actions: {},
+  persist: true
 })
