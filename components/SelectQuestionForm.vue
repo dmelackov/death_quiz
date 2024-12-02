@@ -7,11 +7,10 @@
         <img :src='"/static/attachments/" + attachment' alt="" srcset="" class="w-1/4">
       </template>
     </div>
-    <div class="flex gap-1 justify-between flex-col">
+    <div class="grid gap-1 grid-cols-[repeat(auto-fit,minmax(150px,1fr))]">
       <template v-for="(answer, ind) in shuffled_answers">
-        <div class="flex gap-2 flex-row">
-          <input type="radio" v-model="answer_text" :value="answer" :inputId="'r'+ind" :disabled="answered"/>
-          <label :for="'r'+ind" :class="answered ? (isCorrect(answer) ? 'text-green-500' : 'text-red-500') : 'text-slate-100'" >{{answer}}</label>
+        <div class="p-2 text-center w-full min-w-24" @click="answer_f(ind)" :class="[getColor(ind), answered ? '' : 'hover:bg-slate-700 cursor-pointer']">
+          <p class="text-slate-100" >{{answer}}</p>
         </div>
       </template>
     </div>
@@ -39,6 +38,31 @@ function shuffle(array: string[]) {
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array
+}
+
+function getColor(index: number){
+  if (answered.value) {
+    if (isCorrect(shuffled_answers.value[index])) {
+      return "bg-green-500"
+    } else {
+      if(shuffled_answers.value[index] == answer_text.value){
+        return "bg-red-500"
+      }
+      return "bg-slate-600"
+    }
+  } else {
+    if (shuffled_answers.value[index] == answer_text.value) {
+      return 'bg-slate-800'
+    } else {
+      return 'bg-slate-600'
+    }
+  }
+}
+
+function answer_f(index: number){
+  if (answered.value) return
+  answer_text.value = shuffled_answers.value[index]
+  submitAnswer()
 }
 
 onMounted(() => {

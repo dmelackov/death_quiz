@@ -1,5 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  primevue: {
+    options: {
+      unstyled: true
+    }
+  },
   modules: [
     '@pinia/nuxt',
     '@nuxtjs/tailwindcss',
