@@ -11,7 +11,7 @@
       <template v-for="(answer, ind) in shuffled_answers">
         <p class="text-slate-100">{{ answer }}</p>
         <select v-model="answers[ind]" :disabled="answered"
-        class=""
+        class="text-slate-950"
           :class="answered ? (isCorrect(answer, answers[ind]) ? 'bg-green-500' : 'bg-red-500') : 'bg-slate-100'">
           <option v-for="(candidate, ind) in props.question.categories" :value="candidate">
             {{ candidate }}</option>
