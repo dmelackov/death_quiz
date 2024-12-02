@@ -12,27 +12,33 @@
 
       <component v-bind:is="myComponent" :question="currentQuestion" @answered="answered"></component>
     </div>
-    <Dialog v-model:visible="dialog_visible" modal header="Settings" :style="{ width: '25rem' }" pt:root="bg-slate-200 rounded p-4" pt:header="flex flex-row w-full justify-between" pt:headeraction="w-max h-max">
-      <div>
-        <input id="set1" type="checkbox" v-model="settingsStore.question_types['text']">
-        <label for="set1">Type text</label>
+    <Dialog v-model:visible="dialog_visible" modal header="Settings" :style="{ width: '25rem' }"
+      pt:root="bg-slate-200 rounded p-4" pt:header="flex flex-row w-full justify-between" pt:headeraction="w-max h-max">
+      <div class="flex flex-row">
+        <div>
+          <div>
+            <input id="set1" type="checkbox" v-model="settingsStore.question_types['text']">
+            <label for="set1">Type text</label>
+          </div>
+          <div>
+            <input id="set2" type="checkbox" v-model="settingsStore.question_types['select']">
+            <label for="set2">Type select</label>
+          </div>
+          <div>
+            <input id="set3" type="checkbox" v-model="settingsStore.question_types['multiple-select']">
+            <label for="set3">Type multi-select</label>
+          </div>
+          <div>
+            <input id="set4" type="checkbox" v-model="settingsStore.question_types['order']">
+            <label for="set4">Type order</label>
+          </div>
+          <div>
+            <input id="set5" type="checkbox" v-model="settingsStore.question_types['category']">
+            <label for="set5">Type category</label>
+          </div>
+        </div>
       </div>
-      <div>
-        <input id="set2" type="checkbox" v-model="settingsStore.question_types['select']">
-        <label for="set2">Type select</label>
-      </div>
-      <div>
-        <input id="set3" type="checkbox" v-model="settingsStore.question_types['multiple-select']">
-        <label for="set3">Type multi-select</label>
-      </div>
-      <div>
-        <input id="set4" type="checkbox" v-model="settingsStore.question_types['order']">
-        <label for="set4">Type order</label>
-      </div>
-      <div>
-        <input id="set5" type="checkbox" v-model="settingsStore.question_types['category']">
-        <label for="set5">Type category</label>
-      </div>
+
     </Dialog>
   </div>
 </template>
@@ -54,6 +60,8 @@ const incorrect_count = ref(0)
 
 const dialog_visible = ref(false)
 
+const question_bins: Ref<number[]> = ref([])
+
 const question_forms: { [id: string]: Component } = {
   "text": TextQuestionForm,
   "select": SelectQuestionForm,
@@ -64,6 +72,7 @@ const question_forms: { [id: string]: Component } = {
 
 onMounted(() => {
   loadNextQuestion()
+  question_bins.value = new Array(Math.ceil(questionsStore.questions.length / 10)).fill(true)
 })
 
 const myComponent: Component = computed(() => {
@@ -82,8 +91,17 @@ function answered(is_correct: boolean) {
   loadNextQuestion()
 }
 
+function generateRange(a: number, b: number) {
+  let result = [];
+  for (let i = a; i <= b; i++) {
+    result.push(i);
+  }
+  return result;
+}
+
+
 function loadNextQuestion() {
-  const question = questionsStore.getNextRandomQuestion()
+  const question = questionsStore.getNextRandomQuestion(generateRange(0, questionsStore.questions.length - 1))
   if (!settingsStore.question_types[question.type]) return loadNextQuestion()
   currentQuestion.value = question
 }

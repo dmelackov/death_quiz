@@ -9,7 +9,8 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxtjs/tailwindcss',
     '@vueuse/nuxt',
-    '@primevue/nuxt-module'
+    '@primevue/nuxt-module',
+    'pinia-plugin-persistedstate/nuxt'
   ],
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true }
