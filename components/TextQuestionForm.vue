@@ -34,7 +34,7 @@ const props = defineProps<{
 
 function submitAnswer() {
   answered.value = true
-  is_correct.value = props.question.answer.toString().toLowerCase() === answer_text.value.toString().toLowerCase()
+  is_correct.value = props.question.answer.toString().toLowerCase() === answer_text.value.toString().toLowerCase().trim()
 }
 
 function enter(event: KeyboardEvent) {

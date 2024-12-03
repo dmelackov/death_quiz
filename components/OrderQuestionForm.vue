@@ -62,7 +62,7 @@ watch(props, () => {
 
 function submitAnswer() {
   answered.value = true
-  is_correct.value = right_answer.value.toString().toLowerCase() === answer_text.value.toString().toLowerCase()
+  is_correct.value = right_answer.value.toString().toLowerCase() === answer_text.value.toString().toLowerCase().trim()
 }
 
 function enter(event: KeyboardEvent) {
