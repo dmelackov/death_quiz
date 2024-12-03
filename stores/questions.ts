@@ -38,12 +38,17 @@ export const useMyQuestionsStore = defineStore('myQuestionsStore', {
   actions: {
     getNextRandomQuestion(selected: number[], filters: { [key: string]: boolean }) {
       let select_range = []
+      let ids = []
       for (let i = 0; i < this.questions.length; i++) {
         if(!filters[this.questions[i].type]) continue
-        if(selected.includes(i)) select_range.push(this.questions[i])
+        if(selected.includes(i)) {
+          select_range.push(this.questions[i])
+          ids.push(i)
+        }
       }
       if (select_range.length == 0) return null
-      return select_range[Math.round(Math.random() * (select_range.length - 1))] as Question
+      let selected_id = ids[Math.round(Math.random() * (ids.length - 1))]
+      return {q: select_range[ids.indexOf(selected_id)] as Question, i: selected_id}
     },
   }
 })
