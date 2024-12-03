@@ -62,6 +62,7 @@ import TextQuestionForm from '~/components/TextQuestionForm.vue';
 import { useMyQuestionsStore, type Question } from '~/stores/questions';
 import { Dialog } from 'primevue';
 const currentQuestion: Ref<Question | null> = ref(null)
+const currentQuestionId: Ref<number | null> = ref(0)
 const questionsStore = useMyQuestionsStore()
 const settingsStore = useMySettingsStore()
 const toast = useToast()
@@ -70,6 +71,8 @@ const correct_count = ref(0)
 const incorrect_count = ref(0)
 
 const dialog_visible = ref(false)
+
+const valid_queue: Ref<number[]> = ref([])
 
 const question_forms: { [id: string]: Component } = {
   "text": TextQuestionForm,
@@ -88,7 +91,7 @@ onMounted(() => {
     "multiple-select": true,
     "order": true,
     "category": true
-  })
+  })?.q
 })
 
 const myComponent: Component = computed(() => {
@@ -101,6 +104,11 @@ const myComponent: Component = computed(() => {
 function answered(is_correct: boolean) {
   if (is_correct) {
     correct_count.value += 1
+    if(currentQuestionId.value != null)
+      valid_queue.value.push(currentQuestionId.value)
+    if(valid_queue.value.length > 9) {
+      valid_queue.value = valid_queue.value.slice(1)
+    }
   } else {
     incorrect_count.value += 1
   }
@@ -123,12 +131,14 @@ function loadNextQuestion() {
     if (!settingsStore.questions_bin[i]) continue
     question_nums = question_nums.concat(generateRange(i * 10, (i + 1) * 10 - 1))
   }
+  question_nums = question_nums.filter(q => !valid_queue.value.includes(q))
   const question = questionsStore.getNextRandomQuestion(question_nums, settingsStore.question_types)
   if (question == null) {
     toast.add({ summary: "Следующий вопрос не найден", severity: "error", detail: "Измените фильтры", life: 30000})
     return
   }
-  currentQuestion.value = question
+  currentQuestion.value = question.q
+  currentQuestionId.value = question.i
 }
 
 </script>
