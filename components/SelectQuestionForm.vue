@@ -3,19 +3,19 @@
     <p class="text-slate-300">Номер вопроса: {{props.question.id}}</p>
     <h1 class="text-slate-100 text-2xl whitespace-pre-wrap">{{props.question.question}}</h1>
     <div>
-      <template v-for="attachment in props.question.attachments">
+      <template v-for="attachment in props.question.attachments" :key="attachment">
         <img :src='"/static/attachments/" + attachment' alt="" srcset="" class="w-1/4">
       </template>
     </div>
     <div class="grid gap-1 grid-cols-[repeat(auto-fit,minmax(150px,1fr))]">
-      <template v-for="(answer, ind) in shuffled_answers">
-        <div class="p-2 text-center w-full min-w-24 flex flex-col justify-center" @click="answer_f(ind)" :class="[getColor(ind), answered ? '' : 'hover:bg-slate-700 cursor-pointer']">
+      <template v-for="(answer, ind) in shuffled_answers" :key="ind">
+        <div class="p-2 text-center w-full min-w-24 flex flex-col justify-center" @click="answer_f(ind)" :class="answerClasses(ind)">
           <p class="text-slate-100" >{{answer}}</p>
         </div>
       </template>
     </div>
     <button v-if="!answered" @click="submitAnswer"  class="bg-slate-600 p-2 hover:bg-slate-800">Submit</button>
-    <button v-if="answered" @click="next" class="bg-slate-600 p-2 hover:bg-slate-800">Next</button>
+    <button v-else @click="next" class="bg-slate-600 p-2 hover:bg-slate-800">Next</button>
   </div>
 </template>
 
@@ -31,6 +31,10 @@ const answered = ref(false)
 const is_correct = ref(false)
 
 const shuffled_answers = ref<string[]>([])
+
+const answerClasses = (ind: number) => {
+  return [getColor(ind), answered ? '' : 'hover:bg-slate-700 cursor-pointer']
+}
 
 function getColor(index: number){
   if (answered.value) {

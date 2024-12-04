@@ -85,13 +85,14 @@ const question_forms: { [id: string]: Component } = {
 onMounted(() => {
   if(settingsStore.questions_bin.length != Math.ceil(questionsStore.questions.length / 10))
       settingsStore.questions_bin = new Array(Math.ceil(questionsStore.questions.length / 10)).fill(true)
-  currentQuestion.value = questionsStore.getNextRandomQuestion([0], {
+  const question = questionsStore.getNextRandomQuestion([0], {
     "text": true,
     "select": true,
     "multiple-select": true,
     "order": true,
     "category": true
-  })?.q
+  })
+  currentQuestion.value = question!.q
 })
 
 const myComponent: Component = computed(() => {
@@ -126,15 +127,14 @@ function generateRange(a: number, b: number) {
 
 
 function loadNextQuestion() {
-  let question_nums: number[] = []
+  const question_nums: number[] = []
   for (let i = 0; i < settingsStore.questions_bin.length; i++) {
     if (!settingsStore.questions_bin[i]) continue
-    question_nums = question_nums.concat(generateRange(i * 10, (i + 1) * 10 - 1))
+    question_nums.push(...generateRange(i * 10, (i + 1) * 10 - 1))
   }
-  question_nums = question_nums.filter(q => !valid_queue.value.includes(q))
-  const question = questionsStore.getNextRandomQuestion(question_nums, settingsStore.question_types)
+  const question = questionsStore.getNextRandomQuestion(question_nums.filter(q => !valid_queue.value.includes(q)), settingsStore.question_types)
   if (question == null) {
-    toast.add({ summary: "Следующий вопрос не найден", severity: "error", detail: "Измените фильтры", life: 30000})
+    toast.add({ summary: "Следующий вопрос не найден", severity: "error", detail: "Измените фильтры", life: 3000})
     return
   }
   currentQuestion.value = question.q

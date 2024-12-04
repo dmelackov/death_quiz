@@ -19,12 +19,12 @@
       </template>
     </div>
     <button v-if="!answered" @click="submitAnswer" class="bg-slate-600 p-2 hover:bg-slate-800">Submit</button>
-    <button v-if="answered" @click="next" class="bg-slate-600 p-2 hover:bg-slate-800">Next</button>
+    <button v-else @click="next" class="bg-slate-600 p-2 hover:bg-slate-800">Next</button>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { type MultiSelectQuestion, type Question } from '~/stores/questions';
+import { type MultiSelectQuestion } from '~/stores/questions';
 const emit = defineEmits<{
   (event: 'answered', is_correct: boolean): void;
 }>();
@@ -79,6 +79,10 @@ function reload() {
 const props = defineProps<{
   question: MultiSelectQuestion
 }>()
+
+watchEffect(() => {
+  reload()
+})
 
 watch(props, () => {
   reload()

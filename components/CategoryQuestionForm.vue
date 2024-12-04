@@ -21,7 +21,7 @@
       </template>
     </div>
     <button v-if="!answered" @click="submitAnswer" class="bg-slate-600 p-2 hover:bg-slate-800">Submit</button>
-    <button v-if="answered" @click="next" class="bg-slate-600 p-2 hover:bg-slate-800">Next</button>
+    <button v-else @click="next" class="bg-slate-600 p-2 hover:bg-slate-800">Next</button>
   </div>
 </template>
 

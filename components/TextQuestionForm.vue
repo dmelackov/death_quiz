@@ -8,16 +8,15 @@
       </template>
     </div>
     <div class="flex gap-4 justify-between">
-      <input type="text" v-model="answer_text" :disabled="answered" class="bg-slate-600 p-2 flex-grow"/>
+      <input type="text" v-model="answer_text" :disabled="answered" class="bg-slate-600 p-2 flex-grow" tabindex="0"/>
     </div>
     <button v-if="!answered" @click="submitAnswer"  class="bg-slate-600 p-2 hover:bg-slate-800">Submit</button>
-    <button v-if="answered" @click="next" class="bg-slate-600 p-2 hover:bg-slate-800">Next</button>
+    <button v-else @click="next" class="bg-slate-600 p-2 hover:bg-slate-800" tabindex="0">Next</button>
     <p v-if="answered" :class="is_correct ? 'text-green-500' : 'text-red-500'">Answer: {{props.question.answer}}</p>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useFocus } from '@vueuse/core';
 import { type Question } from '~/stores/questions';
 
 const emit = defineEmits<{
